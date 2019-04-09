@@ -1,5 +1,5 @@
 <?php
-namespace EbookAPI;
+namespace aalfiann\EbookAPI;
 
 use aalfiann\ParallelRequest;
 use aalfiann\JSON;

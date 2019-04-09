@@ -1,7 +1,7 @@
 <?php
-namespace EbookAPI;
+namespace aalfiann\EbookAPI;
 
-use EbookAPI\Helper;
+use aalfiann\EbookAPI\Helper;
 
 /**
  * GoodReads API (unstable)
