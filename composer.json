@@ -1,0 +1,27 @@
+{
+    "name": "aalfiann/ebook-api-php",
+    "description": "A PHP wrapper class to get data ebook from Google Book and GoodReads API.",
+    "keywords": ["api","googlebook","goodreads","psr4"],
+    "authors": [
+        {
+            "name": "M ABD AZIZ ALFIAN",
+            "email": "aalfiann@gmail.com",
+            "homepage": "https://github.com/aalfiann",
+            "role": "Developer"
+        }
+    ],
+    "type": "library",
+    "require": {
+        "php": ">=5.4",
+        "aalfiann/parallel-request-php": "^1.0",
+        "aalfiann/json-class-php": "^1.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "aalfiann\\EbookAPI": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
