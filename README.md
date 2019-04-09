@@ -157,3 +157,6 @@ echo $ebook->getBookByISBN('9781451648546');
 // Get book by title
 echo $ebook->getBookByTitle('vuejs');
 ```
+
+**Note:**
+- This libraries does not include with cache. You should cache the results, because Google has **LIMIT RATE** and will block your IP address server if too many request.
