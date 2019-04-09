@@ -19,7 +19,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "aalfiann\\EbookAPI": "src/"
+            "aalfiann\\EbookAPI\\": "src/"
         }
     },
     "minimum-stability": "dev",
