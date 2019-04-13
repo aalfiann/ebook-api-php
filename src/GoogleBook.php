@@ -44,6 +44,11 @@ class GoogleBook extends Helper {
     var $showitembookshelves = false;
 
     /**
+     * @var string Google Book ID
+     */
+    var $googlebookid = '';
+
+    /**
      * @var string $results of json data
      */
     var $results = '';
@@ -278,6 +283,11 @@ class GoogleBook extends Helper {
 
     //Bookshelves=========================
 
+    public function id($id) {
+        $this->googlebookid = $id;
+        return $this;
+    }
+
     /**
      * Get bookshelves by userid
      * 
@@ -327,7 +337,11 @@ class GoogleBook extends Helper {
         } elseif (!empty($this->iduserbookshelves) && !empty($this->idbookshelves) && $this->showitembookshelves){
             $endpoint = 'users/'.$this->iduserbookshelves.'/bookshelves/'.$this->idbookshelves.'/volumes';
         } else {
-            $endpoint = 'volumes';
+            if(!empty($this->googlebookid)) {
+                $endpoint = 'volumes/'.$this->googlebookid;
+            } else {
+                $endpoint = 'volumes';
+            }
         }
         if($production){
             $this->results = $this->request($endpoint,$this->parameters,false);
@@ -338,6 +352,7 @@ class GoogleBook extends Helper {
         $this->iduserbookshelves = '';
         $this->idbookshelves = '';
         $this->showitembookshelves = '';
+        $this->googlebookid = '';
         return $this;
     }
 

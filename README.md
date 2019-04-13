@@ -1,6 +1,6 @@
 # EbookAPI
 
-[![Version](https://img.shields.io/badge/stable-1.0.1-green.svg)](https://github.com/aalfiann/ebook-api-php)
+[![Version](https://img.shields.io/badge/stable-1.1.0-green.svg)](https://github.com/aalfiann/ebook-api-php)
 [![Total Downloads](https://poser.pugx.org/aalfiann/ebook-api-php/downloads)](https://packagist.org/packages/aalfiann/ebook-api-php)
 [![License](https://poser.pugx.org/aalfiann/ebook-api-php/license)](https://github.com/aalfiann/ebook-api-php/blob/HEAD/LICENSE.md)
 
@@ -98,6 +98,9 @@ $ebook->publisher('OUP Oxford','Law')->maxResults(10);
 
 Get book by ID
 ```php
+// Get book by Google Book ID
+$ebook->id('BOOK_ID');
+
 // Get book by ISBN
 $ebook->isbn('ISBN_ID');
 
