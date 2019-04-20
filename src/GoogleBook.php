@@ -348,12 +348,20 @@ class GoogleBook extends Helper {
         } else {
             $this->results = $this->requestDebug($endpoint,$this->parameters,false);
         }
-        // cleanup any userid and id bookshelves
+        // release memory
+        $this->flush();
+        return $this;
+    }
+
+    /**
+     * Flush to release unused memory
+     */
+    private function flush(){
+        $this->parameters = [];
         $this->iduserbookshelves = '';
         $this->idbookshelves = '';
         $this->showitembookshelves = '';
         $this->googlebookid = '';
-        return $this;
     }
 
     /**

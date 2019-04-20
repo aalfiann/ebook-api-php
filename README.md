@@ -1,6 +1,6 @@
 # EbookAPI
 
-[![Version](https://img.shields.io/badge/stable-1.1.0-green.svg)](https://github.com/aalfiann/ebook-api-php)
+[![Version](https://img.shields.io/badge/stable-1.2.0-green.svg)](https://github.com/aalfiann/ebook-api-php)
 [![Total Downloads](https://poser.pugx.org/aalfiann/ebook-api-php/downloads)](https://packagist.org/packages/aalfiann/ebook-api-php)
 [![License](https://poser.pugx.org/aalfiann/ebook-api-php/license)](https://github.com/aalfiann/ebook-api-php/blob/HEAD/LICENSE.md)
 
@@ -181,13 +181,13 @@ So you can use `addParam($name,$value)` function.
 For example we want to [Get a user's review for a given book](https://www.goodreads.com/api/index#review.show_by_user_and_book)  
 ```php
 $ebook->path('review/show_by_user_and_book.xml')
-    // Add param 'user_id' which is not available inside class
+    // Add param 'user_id' which is not available inside the class
     ->addParam('user_id',1)
     
-    // Add param 'book_id' which is not available inside class
+    // Add param 'book_id' which is not available inside the class
     ->addParam('book_id',50)
 
-    // Add param 'include_review_on_work' which is not available inside class
+    // Add param 'include_review_on_work' which is not available inside the class
     ->addParam('include_review_on_work','false')
     
     // Send request to GoodReads API 
@@ -204,7 +204,7 @@ For more information about `path()` and other , You have to read the [GoodReads 
 
 This is how to use with `GoodReadsMethod` class  
 ```php
-use aaliann\EbookAPI\GoodReadsMethod;
+use aalfiann\EbookAPI\GoodReadsMethod;
 require_once ('vendor/autoload.php');
 
 header('Content-Type: application/json');
@@ -214,7 +214,13 @@ $ebook = new GoodReadsMethod('YOUR_GOODREADS_API_KEY');
 echo $ebook->searchBook('fiction');
 
 // Search Book about 'fiction' but show at page 3
-echo $ebook->searchBook('steve job',3);
+echo $ebook->searchBook('fiction',3);
+
+// Search Book by Genre 'comedy'
+echo $ebook->searchBookByGenre('comedy');
+
+// Get book by GoodReads Internal ID
+echo $ebook->getBook('21825181');
 
 // Get book by ISBN
 echo $ebook->getBookByISBN('9781451648546');
@@ -224,5 +230,5 @@ echo $ebook->getBookByTitle('vuejs');
 ```
 
 **Note:**
-- This libraries does not include with cache. You should cache the results, because Google has **LIMIT RATE** and will block your IP address server if too many request.
-- `GoodReadsMethod` class is unstable, maybe code will change in the future depends on GoodReads.
+- This libraries does not include with cache. You should cache the results, because `Google` and `GoodReads` has **LIMIT RATE** and will block your IP address server if too many request.
+- `GoodReadsMethod` class is unstable, maybe code will change in the future depends on `GoodReads`.

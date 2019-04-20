@@ -14,7 +14,8 @@
     "require": {
         "php": ">=5.4",
         "aalfiann/parallel-request-php": "^1.0",
-        "aalfiann/json-class-php": "^1.0"
+        "aalfiann/json-class-php": "^1.0",
+        "aalfiann/event-locker-php": "^1.0"
     },
     "license": "MIT",
     "autoload": {

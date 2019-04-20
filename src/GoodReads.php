@@ -2,13 +2,15 @@
 namespace aalfiann\EbookAPI;
 
 use aalfiann\EbookAPI\Helper;
+use aalfiann\EventLocker;
 
 /**
- * GoodReads API (unstable)
- * Note: 
- * - This API is still in development process and unstable (code will change in the future).
- * - But we already stop to develop GoodReads API at this moment, maybe we will continue this later.
- * - Last updated and tested at 09 April 2019.
+ * Google Reads API
+ * 
+ * @package    EbookAPI
+ * @author     M ABD AZIZ ALFIAN <github.com/aalfiann>
+ * @copyright  Copyright (c) 2019 M ABD AZIZ ALFIAN
+ * @license    https://github.com/aalfiann/ebook-api-php/blob/master/LICENSE.md  MIT License
  */
 class GoodReads extends Helper {
 
@@ -21,6 +23,21 @@ class GoodReads extends Helper {
      * @var string Your API key.
      */
     protected $apiKey = '';
+
+    /**
+     * @var array Endpoint
+     */
+    var $endpoint = '';
+    
+    /**
+     * @var array Parameter
+     */
+    var $parameters = [];
+
+    /**
+     * @var string $results of json data
+     */
+    var $results = '';
     
     /**
      * Initialise the API wrapper instance.
@@ -31,234 +48,244 @@ class GoodReads extends Helper {
     {
         $this->apiKey = (string)$apiKey;
     }
-    
+
     /**
-     * Get details for a given author.
-     *
-     * @param  integer $authorId
-     * @return array
+     * Add parameter to url
+     * 
+     * @param string $name  parameter name
+     * @param string $value parameter value
      */
-    public function getAuthor($authorId)
-    {
-        return $this->request(
-            'author/show',
-            array(
-                'key' => $this->apiKey,
-                'id' => (int)$authorId
-            )
-        );
+    public function addParam($name,$value){
+        $this->parameters[$name] = $value;
+        return $this;
     }
-    
+
     /**
-     * Get books by a given author.
-     *
-     * @param  integer $authorId
-     * @param  integer $page     Optional page offset, 1-N
-     * @return array
+     * Set the path of GoodReads API
+     * 
+     * @param string $endpoint
+     * @return this
      */
-    public function getBooksByAuthor($authorId, $page = 1)
-    {
-        return $this->request(
-            'author/list',
-            array(
-                'key' => $this->apiKey,
-                'id' => (int)$authorId,
-                'page' => (int)$page
-            )
-        );
+    public function path($endpoint=''){
+        $this->endpoint = $endpoint;
+        return $this;
     }
-    
+
     /**
-     * Get details for a given book.
-     *
-     * @param  integer $bookId
-     * @return array
+     * Add 'q' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function getBook($bookId)
-    {
-        return $this->request(
-            'book/show',
-            array(
-                'key' => $this->apiKey,
-                'id' => (int)$bookId
-            )
-        );
+    public function q($value){
+        $this->addParam('q',$value);
+        return $this;
     }
-    
+
     /**
-     * Get details for a given book by ISBN.
-     *
-     * @param  string $isbn
-     * @return array
+     * Add 'id' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function getBookByISBN($isbn)
-    {
-        return $this->request(
-            'book/isbn/' . urlencode($isbn),
-            array(
-                'key' => $this->apiKey
-            )
-        );
+    public function id($value){
+        $this->addParam('id',$value);
+        return $this;
     }
-    
+
     /**
-     * Get details for a given book by title.
-     *
-     * @param  string $title
-     * @param  string $author Optionally provide this for more accuracy.
-     * @return array
+     * Add 'page' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function getBookByTitle($title, $author = '')
-    {
-        return $this->request(
-            'book/title',
-            array(
-                'key' => $this->apiKey,
-                'title' => urlencode($title),
-                'author' => $author
-            )
-        );
+    public function page($value){
+        $this->addParam('page',$value);
+        return $this;
     }
-    
+
     /**
-     * Get details for a given user.
-     *
-     * @param  integer $userId
-     * @return array
+     * Add 'per_page' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function getUser($userId)
-    {
-        return $this->request(
-            'user/show',
-            array(
-                'key' => $this->apiKey,
-                'id' => (int)$userId
-            )
-        );
+    public function per_page($value){
+        if($value>200) $value = 200;
+        $this->addParam('per_page',$value);
+        return $this;
     }
-    
+
     /**
-     * Get details for a given user by username.
-     *
-     * @param  string $username
-     * @return array
+     * Add 'sort' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function getUserByUsername($username)
-    {
-        return $this->request(
-            'user/show',
-            array(
-                'key' => $this->apiKey,
-                'username' => $username
-            )
-        );
+    public function sort($value){
+        $opt = [
+            'title', 'author', 'cover', 'rating', 'year_pub', 'date_pub', 'date_pub_edition',
+            'date_started', 'date_read', 'date_updated', 'date_added', 'recommender', 'avg_rating',
+            'num_ratings', 'review', 'read_count', 'votes', 'random', 'comments', 'notes', 'isbn',
+            'isbn13', 'asin', 'num_pages', 'format', 'position', 'shelves', 'owned', 'date_purchased', 
+            'purchase_location', 'condition'
+        ];
+        if(in_array($value,$opt)){
+            $this->addParam('sort',$value);
+        }
+        return $this;
     }
-    
+
     /**
-     * Get details for of a particular review
-     *
-     * @param  integer $reviewId
-     * @param  integer $page     Optional page number of comments, 1-N
-     * @return array
+     * Add 'order' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function getReview($reviewId, $page = 1)
-    {
-        return $this->request(
-            'review/show',
-            array(
-                'key' => $this->apiKey,
-                'id' => (int)$reviewId,
-                'page' => (int)$page
-            )
-        );
+    public function order($value){
+        if(in_array($value,['a','d'])){
+            $this->addParam('order',$value);
+        }
+        return $this;
     }
-    
+
     /**
-     * Get a shelf for a given user.
-     *
-     * @param  integer $userId
-     * @param  string  $shelf  read|currently-reading|to-read etc
-     * @param  string  $sort   title|author|rating|year_pub|date_pub|date_read|date_added|avg_rating etc
-     * @param  integer $limit  1-200
-     * @param  integer $page   1-N
-     * @return array
+     * Add 'search[field]' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function getShelf($userId, $shelf, $sort = 'title', $limit = 100, $page = 1)
-    {
-        return $this->request(
-            'review/list',
-            array(
-                'v' => 2,
-                'format' => 'xml',     // :( GoodReads still doesn't support JSON for this endpoint
-                'key' => $this->apiKey,
-                'id' => (int)$userId,
-                'shelf' => $shelf,
-                'sort' => $sort,
-                'page' => $page,
-                'per_page' => $limit
-            )
-        );
+    public function searchField($value){
+        $this->addParam('search[field]',$value);
+        return $this;
     }
-    
+
     /**
-     * Get all books for a given user.
-     *
-     * @param  integer $userId
-     * @param  string  $sort   title|author|rating|year_pub|date_pub|date_read|date_added|avg_rating etc
-     * @param  integer $limit  1-200
-     * @param  integer $page   1-N
-     * @return array
+     * Add 'search[query]' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function getAllBooks($userId, $sort = 'title', $limit = 100, $page = 1)
-    {
-        return $this->request(
-            'review/list',
-            array(
-                'v' => 2,
-                'format' => 'xml',     // :( GoodReads still doesn't support JSON for this endpoint
-                'key' => $this->apiKey,
-                'id' => (int)$userId,
-                'sort' => $sort,
-                'page' => $page,
-                'per_page' => $limit
-            )
-        );
+    public function searchQuery($value){
+        $this->addParam('search[query]',$value);
+        return $this;
     }
-    
+
     /**
-     * Get the details of an author.
-     *
-     * @param  integer $authorId
-     * @return array
+     * Add 'title' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function showAuthor($authorId)
-    {
-        return $this->getAuthor($authorId);
+    public function title($value){
+        $this->addParam('title',$value);
+        return $this;
     }
-    
+
     /**
-     * Get the details of a user.
-     *
-     * @param  integer $userId
-     * @return array
+     * Add 'author' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function showUser($userId)
-    {
-        return $this->getUser($userId);
+    public function author($value){
+        $this->addParam('author',$value);
+        return $this;
     }
-    
+
     /**
-     * Get the latest books read for a given user.
-     *
-     * @param  integer $userId
-     * @param  string  $sort   title|author|rating|year_pub|date_pub|date_read|date_added|avg_rating etc
-     * @param  integer $limit  1-200
-     * @param  integer $page   1-N
-     * @return array
+     * Add 'username' parameter
+     * 
+     * @param string|int $value
+     * @return this
      */
-    public function getLatestReads($userId, $sort = 'date_read', $limit = 100, $page = 1)
-    {
-        return $this->getShelf($userId, 'read', $sort, $limit, $page);
+    public function username($value){
+        $this->addParam('username',$value);
+        return $this;
+    }
+
+    /**
+     * Add 'format' parameter
+     * 
+     * @param string|int $value
+     * @return this
+     */
+    public function format($value){
+        $this->addParam('format',$value);
+        return $this;
+    }
+
+    /**
+     * Add 'v' parameter
+     * 
+     * @param string|int $value
+     * @return this
+     */
+    public function v($value){
+        $this->addParam('v',$value);
+        return $this;
+    }
+
+    /**
+     * Add 'shelf' parameter
+     * 
+     * @param string|int $value
+     * @return this
+     */
+    public function shelf($value){
+        if(in_array($value,['read','currently-reading','to-read'])){
+            $this->addParam('shelf',$value);
+        }
+        return $this;
+    }
+
+    /**
+     * Send request to GoodReads API
+     * 
+     * @param bool $production
+     * @return this
+     */
+    public function send($production=true){
+        // lock this request
+        $locker = new EventLocker();
+        $locker->lock();
+        // one second wait for the next request
+        sleep(1);
+        // unlock this request
+        $locker->unlock();
+
+        $this->addParam('key',$this->apiKey);
+        
+        if($production){
+            $this->results = $this->request($this->endpoint,$this->parameters,false);
+        } else {
+            $this->results = $this->requestDebug($this->endpoint,$this->parameters,false);
+        }
+        // release memory
+        $this->flush();
+        return $this;
+    }
+
+    /**
+     * Flush to release unused memory
+     */
+    private function flush(){
+        $this->parameters = [];
+    }
+
+    /**
+     * Get response from GoodReads API
+     * 
+     * @return string
+     */
+    public function getResponse(){
+        if(!empty($this->results)){
+            $data = json_decode($this->results);
+            if(!empty($data) && $data->code < 400){
+                return $this->results;
+            }
+        }
+        return '';
     }
 
 }
