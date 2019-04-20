@@ -146,13 +146,75 @@ echo $ebook->send(false)->getResponse();
 ```
 
 ## Usage to use GoodReads API
-GoodReads API still in development process and unstable (code will change in the future).  
-We already stop to develop GoodReads API wrapper at this moment, maybe we will continue this later.
+### Example how to search books
 
-This is how to use with GoodReads API
+To search books with `GoodReads`, you must send a request to `https://www.goodreads.com/search/index.xml` and there is four parameters required, it is `key`,`q`,`page` and `search[field]`.  [Visit here for more information](https://www.goodreads.com/api/index#search.books).  
+
 ```php
-use aaliann\EbookAPI\GoodReads;
+use aalfiann\EbookAPI\GoodReads;
+require_once ('vendor/autoload.php');
+
+header('Content-Type: application/json');
 $ebook = new GoodReads('YOUR_GOODREADS_API_KEY');
+
+$ebook->path('search/index.xml')
+    // Add param 'q' to query
+    ->q('steve jobs')
+    
+    // Add param 'search[Field]' to query more spesific results. default is 'all'
+    ->searchField('title')
+    
+    // You can add 'page' for pagination. Start page is always 1
+    ->page(1)
+    
+    // Send request to GoodReads API
+    ->send()
+    
+    // Get response from GoodReads API
+    ->getResponse();
+```
+
+### Example how to manual add param
+If there is new feature released by Goodreads, of course the shortcut method of the new parameter is not available in the class.  
+So you can use `addParam($name,$value)` function.  
+
+For example we want to [Get a user's review for a given book](https://www.goodreads.com/api/index#review.show_by_user_and_book)  
+```php
+$ebook->path('review/show_by_user_and_book.xml')
+    // Add param 'user_id' which is not available inside class
+    ->addParam('user_id',1)
+    
+    // Add param 'book_id' which is not available inside class
+    ->addParam('book_id',50)
+
+    // Add param 'include_review_on_work' which is not available inside class
+    ->addParam('include_review_on_work','false')
+    
+    // Send request to GoodReads API 
+    ->send()
+
+    // Get response from GoodReads API
+    ->getResponse();
+```
+
+For more information about `path()` and other , You have to read the [GoodReads API Documentation](https://www.goodreads.com/api/index), because this `GoodReads` class is a wrapper only.
+
+### GoodReadsMethod class
+`GoodReadsMethod` class is the simple way to make a communication with GoodReads API. This class is contains the method which is often to use or general method only.
+
+This is how to use with `GoodReadsMethod` class  
+```php
+use aaliann\EbookAPI\GoodReadsMethod;
+require_once ('vendor/autoload.php');
+
+header('Content-Type: application/json');
+$ebook = new GoodReadsMethod('YOUR_GOODREADS_API_KEY');
+
+// Search Book
+echo $ebook->searchBook('fiction');
+
+// Search Book about 'fiction' but show at page 3
+echo $ebook->searchBook('steve job',3);
 
 // Get book by ISBN
 echo $ebook->getBookByISBN('9781451648546');
@@ -163,3 +225,4 @@ echo $ebook->getBookByTitle('vuejs');
 
 **Note:**
 - This libraries does not include with cache. You should cache the results, because Google has **LIMIT RATE** and will block your IP address server if too many request.
+- `GoodReadsMethod` class is unstable, maybe code will change in the future depends on GoodReads.
