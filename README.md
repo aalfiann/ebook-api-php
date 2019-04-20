@@ -1,10 +1,9 @@
 # EbookAPI
-
-[![Version](https://img.shields.io/badge/stable-1.2.0-green.svg)](https://github.com/aalfiann/ebook-api-php)
+[![Version](https://img.shields.io/badge/stable-1.2.1-green.svg)](https://github.com/aalfiann/ebook-api-php)
 [![Total Downloads](https://poser.pugx.org/aalfiann/ebook-api-php/downloads)](https://packagist.org/packages/aalfiann/ebook-api-php)
 [![License](https://poser.pugx.org/aalfiann/ebook-api-php/license)](https://github.com/aalfiann/ebook-api-php/blob/HEAD/LICENSE.md)
 
-A PHP wrapper class to get data ebook from Google Book and GoodReads API.
+A PHP wrapper class to get the ebook information data from Google Book or GoodReads API.
 
 ## Installation
 
@@ -229,6 +228,7 @@ echo $ebook->getBookByISBN('9781451648546');
 echo $ebook->getBookByTitle('vuejs');
 ```
 
-**Note:**
-- This libraries does not include with cache. You should cache the results, because `Google` and `GoodReads` has **LIMIT RATE** and will block your IP address server if too many request.
+### Limitation:
+- This library is only to get the public data information from `Google Book` or `GoodReads` API, so there is no **OAuth / Authorization** implemented in this library.
+- This library does not include with cache. You should cache the results, because `Google` and `GoodReads` has **LIMIT RATE** and will block your IP address server if too many request.
 - `GoodReadsMethod` class is unstable, maybe code will change in the future depends on `GoodReads`.
