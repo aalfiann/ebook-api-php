@@ -249,8 +249,8 @@ class GoodReads extends Helper {
         // lock this request
         $locker = new EventLocker();
         $locker->lock();
-        // one second wait for the next request
-        sleep(1);
+        // a quarter second wait for the next request
+        usleep(250000);
         // unlock this request
         $locker->unlock();
 
