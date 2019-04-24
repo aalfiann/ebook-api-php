@@ -1,5 +1,5 @@
 # EbookAPI
-[![Version](https://img.shields.io/badge/stable-1.2.2-green.svg)](https://github.com/aalfiann/ebook-api-php)
+[![Version](https://img.shields.io/badge/stable-1.2.3-green.svg)](https://github.com/aalfiann/ebook-api-php)
 [![Total Downloads](https://poser.pugx.org/aalfiann/ebook-api-php/downloads)](https://packagist.org/packages/aalfiann/ebook-api-php)
 [![License](https://poser.pugx.org/aalfiann/ebook-api-php/license)](https://github.com/aalfiann/ebook-api-php/blob/HEAD/LICENSE.md)
 

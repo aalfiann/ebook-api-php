@@ -372,7 +372,7 @@ class GoogleBook extends Helper {
     public function getResponse(){
         if(!empty($this->results)){
             $data = json_decode($this->results);
-            if(!empty($data) && $data->code < 400){
+            if(!empty($data)){
                 return $this->results;
             }
         }
